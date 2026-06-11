@@ -1,0 +1,11 @@
+{
+	"id": "obsidian-gantt-plugin",
+	"name": "Gantt Chart Plugin",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Scans tasks in the vault and displays an interactive, high-fidelity Gantt chart.",
+	"author": "Hasnain Mirza",
+	"authorUrl": "https://hasnainmirza.com",
+	"fundingUrl": "https://hasnainmirza.com",
+	"isDesktopOnly": false
+}
