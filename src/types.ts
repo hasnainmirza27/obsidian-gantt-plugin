@@ -31,6 +31,7 @@ export interface GanttSettings {
 	pathFilter: string;
 	from: string;
 	to: string;
+	height: string;
 }
 
 export const DEFAULT_SETTINGS: GanttSettings = {
@@ -45,5 +46,6 @@ export const DEFAULT_SETTINGS: GanttSettings = {
 	tagFilter: '',
 	pathFilter: '',
 	from: '',
-	to: ''
+	to: '',
+	height: '380px'
 };

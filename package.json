@@ -6,7 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
-		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production"
+		"build": "node node_modules/typescript/lib/tsc.js -noEmit -skipLibCheck && node esbuild.config.mjs production"
 	},
 	"keywords": [
 		"obsidian",

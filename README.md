@@ -50,6 +50,7 @@ tags: #project-alpha
 path: Projects/Marketing
 from: 2026-06-01
 to: 2026-06-30
+height: 450
 showUndated: false
 ```
 ```
@@ -62,6 +63,7 @@ showUndated: false
 - `path`: Folder path filters (supports multiple comma-separated values, e.g. `Projects/Marketing, Projects/Engineering`)
 - `from`: Start date boundary for tasks and timeline (YYYY-MM-DD, e.g. `2026-06-01`)
 - `to`: End date boundary for tasks and timeline (YYYY-MM-DD, e.g. `2026-06-30`)
+- `height`: Height of the chart in pixels (e.g. `450`, defaults to `380px`)
 - `showUndated`: `true` or `false` (shows tasks without dates on today's calendar)
 
 ---

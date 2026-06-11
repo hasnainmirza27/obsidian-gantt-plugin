@@ -42,6 +42,7 @@ export default class GanttPlugin extends Plugin {
 
 			el.empty();
 			const embedContainer = el.createDiv({ cls: 'gantt-embed-container' });
+			embedContainer.style.height = blockSettings.height || '380px';
 
 			try {
 				const tasks = await parseVaultTasks(this.app, blockSettings);
@@ -135,6 +136,12 @@ export default class GanttPlugin extends Plugin {
 				config.from = val.replace(/['"]/g, '').trim();
 			} else if (key === 'to') {
 				config.to = val.replace(/['"]/g, '').trim();
+			} else if (key === 'height') {
+				let heightVal = val.replace(/['"]/g, '').trim();
+				if (/^\d+$/.test(heightVal)) {
+					heightVal += 'px';
+				}
+				config.height = heightVal;
 			}
 		}
 
