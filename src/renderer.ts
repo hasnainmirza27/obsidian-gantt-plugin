@@ -15,8 +15,26 @@ function formatLocalDate(date: Date): string {
 }
 
 // Group tasks according to settings
-function groupTasks(tasks: GanttTask[], groupBy: GroupByOption): Map<string, GanttTask[]> {
+function groupTasks(tasks: GanttTask[], groupBy: GroupByOption, tagFilter: string): Map<string, GanttTask[]> {
 	const groups = new Map<string, GanttTask[]>();
+
+	// Parse filter tags if grouping by tag and filter is active
+	let filterTags: string[] = [];
+	if (groupBy === 'tag' && tagFilter) {
+		filterTags = tagFilter
+			.split(',')
+			.map(t => t.trim())
+			.filter(t => t.length > 0)
+			.map(t => t.startsWith('#') ? t : '#' + t);
+	}
+
+	// Initialize groups in the specific order of filterTags to preserve order
+	if (groupBy === 'tag' && filterTags.length > 0) {
+		for (const tag of filterTags) {
+			groups.set(tag, []);
+		}
+		groups.set('Other', []);
+	}
 
 	for (const task of tasks) {
 		let groupKey = 'Other';
@@ -29,7 +47,16 @@ function groupTasks(tasks: GanttTask[], groupBy: GroupByOption): Map<string, Gan
 		} else if (groupBy === 'heading') {
 			groupKey = task.heading || 'No Section';
 		} else if (groupBy === 'tag') {
-			groupKey = task.tags.length > 0 ? (task.tags[0] || 'No Tag') : 'No Tag';
+			if (filterTags.length > 0) {
+				// Match task against the specified filter tags
+				const matchedTag = filterTags.find(tag => 
+					task.tags.some(t => t.toLowerCase() === tag.toLowerCase())
+				);
+				groupKey = matchedTag || 'Other';
+			} else {
+				// Fallback to task's first tag or 'No Tag'
+				groupKey = task.tags.length > 0 ? (task.tags[0] || 'No Tag') : 'No Tag';
+			}
 		} else {
 			groupKey = 'All Tasks';
 		}
@@ -38,6 +65,13 @@ function groupTasks(tasks: GanttTask[], groupBy: GroupByOption): Map<string, Gan
 			groups.set(groupKey, []);
 		}
 		groups.get(groupKey)?.push(task);
+	}
+
+	// Clean up empty groups, but keep order
+	for (const [key, val] of groups.entries()) {
+		if (val.length === 0) {
+			groups.delete(key);
+		}
 	}
 
 	return groups;
@@ -69,7 +103,8 @@ export function renderGanttChart(
 		}
 
 		// Tag filter (supports multiple comma-separated tags, matches if task has ANY of them)
-		if (settings.tagFilter) {
+		// If we are grouping by tag, we do NOT filter tasks out here, so we can group them into 'Other' / remaining.
+		if (settings.tagFilter && settings.groupBy !== 'tag') {
 			const filterTags = settings.tagFilter
 				.split(',')
 				.map(t => t.trim())
@@ -218,7 +253,7 @@ export function renderGanttChart(
 	const timelineContentEl = timelinePanelEl.createDiv({ cls: 'gantt-timeline-content', attr: { style: `width: ${timelineWidth}px;` } });
 
 	// Group tasks
-	const grouped = groupTasks(filteredTasks, settings.groupBy);
+	const grouped = groupTasks(filteredTasks, settings.groupBy, settings.tagFilter);
 
 	// Render Sidebar and Timeline Header
 	sidebarEl.createDiv({ cls: 'gantt-sidebar-header', text: 'Task / Item' });

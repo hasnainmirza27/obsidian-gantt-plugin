@@ -56,7 +56,7 @@ showUndated: false
 ```
 
 ### Options:
-- `groupBy`: `none`, `file`, `folder`, `heading`, or `tag`
+- `groupBy`: `none`, `file`, `folder`, `heading`, or `tag` (Note: if set to `tag` and `tags` filter is provided, tasks are grouped by those tags in order, with remaining tasks placed in a final `Other` group)
 - `zoom`: `day`, `week`, or `month`
 - `status`: `all`, `open`, or `completed`
 - `tags`: Tags to filter by (supports multiple comma-separated values, e.g. `#todo, #work`)
