@@ -7,6 +7,7 @@ A premium, interactive Gantt Chart plugin for Obsidian. It automatically scans y
 ## ✨ Features
 
 - **Interactive Sidebar View**: Reveal a dedicated Gantt Chart tab in your right sidebar with text search, task status filters (All, Open, Completed), and groupings (by File, Folder, Section Heading, or Tag).
+- **Unified Vertical Scroll**: Task items in the sidebar and task bars in the timeline are rendered in a single scroll container, keeping task names and timeline rows perfectly aligned 1-to-1 as you scroll vertically.
 - **Active Bidirectional Sync**: Toggling task checkboxes directly in the Gantt sidebar updates the checkbox and done dates in the original markdown files.
 - **Visual Task Dependencies**: Automatically links task lines using SVG curves with arrows based on `🆔 <id>` and `⛔ <parent_id>` relationships (ideal for follow-up workflows).
 - **Code Block Embeds**: Render dynamically-scoped Gantt dashboards inside any note using simple `gantt-chart` code blocks.
