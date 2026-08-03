@@ -78,33 +78,103 @@
 /* Timeline Layout */
 .gantt-workspace {
 	display: flex;
+	flex-direction: column;
 	flex: 1;
 	overflow: hidden;
 	position: relative;
 }
 
-/* Left Sidebar (Task list) */
-.gantt-sidebar {
+/* Header Row (Fixed at Top) */
+.gantt-header-row {
+	display: flex;
+	height: 60px;
+	min-height: 60px;
+	background-color: var(--background-secondary);
+	border-bottom: 1px solid var(--border-color);
+	z-index: 10;
+	width: 100%;
+}
+
+.gantt-sidebar-header {
+	width: 280px;
+	min-width: 280px;
+	border-right: 1px solid var(--border-color);
+	display: flex;
+	align-items: center;
+	padding: 0 16px;
+	font-weight: 600;
+	color: var(--text-muted);
+	font-size: 0.9em;
+	box-sizing: border-box;
+}
+
+.gantt-timeline-header-viewport {
+	flex: 1;
+	overflow: hidden;
+	position: relative;
+}
+
+.gantt-timeline-header {
+	height: 100%;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+}
+
+.gantt-header-top-row,
+.gantt-header-bottom-row {
+	display: flex;
+	position: relative;
+	width: 100%;
+}
+
+.gantt-header-top-row {
+	height: 32px;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.gantt-header-bottom-row {
+	height: 28px;
+}
+
+.gantt-header-cell {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.8em;
+	font-weight: 600;
+	color: var(--text-muted);
+	border-right: 1px solid var(--background-modifier-border);
+	height: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+/* Body Container (Single Unified Vertical Scroll) */
+.gantt-body-scroll-container {
+	flex: 1;
+	overflow-y: auto;
+	overflow-x: hidden;
+	position: relative;
+}
+
+.gantt-body-content {
+	display: flex;
+	min-height: 100%;
+	width: 100%;
+}
+
+/* Left Sidebar Body (Task list) */
+.gantt-sidebar-body {
 	width: 280px;
 	min-width: 280px;
 	border-right: 1px solid var(--border-color);
 	background-color: var(--background-secondary);
 	display: flex;
 	flex-direction: column;
-	overflow-y: auto;
 	z-index: 5;
-}
-
-.gantt-sidebar-header {
-	height: 60px;
-	min-height: 60px;
-	display: flex;
-	align-items: center;
-	padding: 0 16px;
-	font-weight: 600;
-	color: var(--text-muted);
-	border-bottom: 1px solid var(--border-color);
-	font-size: 0.9em;
+	box-sizing: border-box;
 }
 
 .gantt-sidebar-row {
@@ -170,66 +240,25 @@
 	transform: rotate(-90deg);
 }
 
-/* Timeline Panel (Right side) */
-.gantt-timeline-panel {
+/* Timeline Body Viewport (Right side) */
+.gantt-timeline-body-viewport {
 	flex: 1;
-	overflow: auto;
+	overflow-x: auto;
+	overflow-y: hidden;
 	position: relative;
 	background-color: var(--background-primary);
 }
 
 .gantt-timeline-content {
 	position: relative;
-	display: inline-block;
+	display: block;
 	min-width: 100%;
-}
-
-/* Timeline Header (Calendar) */
-.gantt-timeline-header {
-	height: 60px;
-	position: sticky;
-	top: 0;
-	background-color: var(--background-secondary);
-	border-bottom: 1px solid var(--border-color);
-	z-index: 6;
-	display: flex;
-	flex-direction: column;
-}
-
-.gantt-header-top-row,
-.gantt-header-bottom-row {
-	display: flex;
-	position: relative;
-	width: 100%;
-}
-
-.gantt-header-top-row {
-	height: 32px;
-	border-bottom: 1px solid var(--background-modifier-border);
-}
-
-.gantt-header-bottom-row {
-	height: 28px;
-}
-
-.gantt-header-cell {
-	position: absolute;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 0.8em;
-	font-weight: 600;
-	color: var(--text-muted);
-	border-right: 1px solid var(--background-modifier-border);
-	height: 100%;
-	white-space: nowrap;
-	overflow: hidden;
 }
 
 /* Grid lines background */
 .gantt-grid-overlay {
 	position: absolute;
-	top: 60px;
+	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
@@ -372,10 +401,10 @@
 /* SVG Connection Overlay */
 .gantt-svg-overlay {
 	position: absolute;
-	top: 60px;
+	top: 0;
 	left: 0;
 	width: 100%;
-	height: calc(100% - 60px);
+	height: 100%;
 	pointer-events: none;
 	z-index: 3;
 }
@@ -494,7 +523,8 @@
 	padding: 8px 12px;
 }
 
-.gantt-embed-container .gantt-sidebar {
+.gantt-embed-container .gantt-sidebar-header,
+.gantt-embed-container .gantt-sidebar-body {
 	width: 200px;
 	min-width: 200px;
 }
@@ -513,6 +543,7 @@
 	height: 28px;
 }
 
+.gantt-embed-container .gantt-header-row,
 .gantt-embed-container .gantt-sidebar-header,
 .gantt-embed-container .gantt-timeline-header {
 	height: 48px;
@@ -520,6 +551,6 @@
 
 .gantt-embed-container .gantt-grid-overlay,
 .gantt-embed-container .gantt-svg-overlay {
-	top: 48px;
-	height: calc(100% - 48px);
+	top: 0;
+	height: 100%;
 }

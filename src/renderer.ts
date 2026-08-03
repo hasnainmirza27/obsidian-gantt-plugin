@@ -246,22 +246,35 @@ export function renderGanttChart(
 	
 	const mainWrapper = container.createDiv({ cls: 'gantt-container' });
 	
-	// Create view panels
+	// Create workspace container
 	const workspaceEl = mainWrapper.createDiv({ cls: 'gantt-workspace' });
-	const sidebarEl = workspaceEl.createDiv({ cls: 'gantt-sidebar' });
-	const timelinePanelEl = workspaceEl.createDiv({ cls: 'gantt-timeline-panel' });
-	const timelineContentEl = timelinePanelEl.createDiv({ cls: 'gantt-timeline-content', attr: { style: `width: ${timelineWidth}px;` } });
+
+	// 1. Fixed Header Row at Top
+	const headerRowEl = workspaceEl.createDiv({ cls: 'gantt-header-row' });
+	headerRowEl.createDiv({ cls: 'gantt-sidebar-header', text: 'Task / Item' });
+	
+	const timelineHeaderViewportEl = headerRowEl.createDiv({ cls: 'gantt-timeline-header-viewport' });
+	const timelineHeaderEl = timelineHeaderViewportEl.createDiv({ cls: 'gantt-timeline-header', attr: { style: `width: ${timelineWidth}px;` } });
+	const headerTopRow = timelineHeaderEl.createDiv({ cls: 'gantt-header-top-row' });
+	const headerBottomRow = timelineHeaderEl.createDiv({ cls: 'gantt-header-bottom-row' });
+
+	// 2. Unified Vertically Scrollable Body Container
+	const bodyScrollContainerEl = workspaceEl.createDiv({ cls: 'gantt-body-scroll-container' });
+	bodyScrollContainerEl.addEventListener('scroll', () => hideTooltip());
+
+	const bodyContentEl = bodyScrollContainerEl.createDiv({ cls: 'gantt-body-content' });
+	const sidebarEl = bodyContentEl.createDiv({ cls: 'gantt-sidebar-body' });
+	const timelineBodyViewportEl = bodyContentEl.createDiv({ cls: 'gantt-timeline-body-viewport' });
+	const timelineContentEl = timelineBodyViewportEl.createDiv({ cls: 'gantt-timeline-content', attr: { style: `width: ${timelineWidth}px;` } });
+
+	// Synchronize horizontal scrolling between timeline viewport and header viewport
+	timelineBodyViewportEl.addEventListener('scroll', () => {
+		hideTooltip();
+		timelineHeaderViewportEl.scrollLeft = timelineBodyViewportEl.scrollLeft;
+	});
 
 	// Group tasks
 	const grouped = groupTasks(filteredTasks, settings.groupBy, settings.tagFilter);
-
-	// Render Sidebar and Timeline Header
-	sidebarEl.createDiv({ cls: 'gantt-sidebar-header', text: 'Task / Item' });
-	
-	// Create Timeline Header elements
-	const timelineHeaderEl = timelineContentEl.createDiv({ cls: 'gantt-timeline-header' });
-	const headerTopRow = timelineHeaderEl.createDiv({ cls: 'gantt-header-top-row' });
-	const headerBottomRow = timelineHeaderEl.createDiv({ cls: 'gantt-header-bottom-row' });
 
 	// Create Grid overlay elements
 	const gridOverlayEl = timelineContentEl.createDiv({ cls: 'gantt-grid-overlay' });
@@ -611,13 +624,13 @@ function drawDependenciesSVG(
 
 		// Calculate coordinates relative to .gantt-timeline-content
 		// parent row top + parent bar top + half height
-		const parentY = parentRow.offsetTop + parentBar.offsetTop + parentBar.offsetHeight / 2 - 60; // offset top of timeline content header (60px sticky header)
-		const childY = childRow.offsetTop + childBar.offsetTop + childBar.offsetHeight / 2 - 60;
+		const parentY = parentRow.offsetTop + parentBar.offsetTop + parentBar.offsetHeight / 2;
+		const childY = childRow.offsetTop + childBar.offsetTop + childBar.offsetHeight / 2;
 
 		const parentXEnd = parentBar.offsetLeft + parentBar.offsetWidth;
 		const childXStart = childBar.offsetLeft;
 
-		// Check if we are drawing inside scroll boundary (Y must be > 0 since it is below the sticky header)
+		// Check if coordinates are valid
 		if (parentY < 0 || childY < 0) continue;
 
 		// Draw path
